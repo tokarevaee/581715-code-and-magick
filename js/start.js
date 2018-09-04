@@ -1,22 +1,30 @@
 'use strict';
 
-var CLOUD_WIDTH = 420;
-var CLOUD_HEIGHT = 270;
-var CLOUD_X = 100;
-var CLOUD_Y = 10;
-var CLOUD_PADDING = 10;
-var CLOUD_GAP = 10;
-var FONT_GAP = 16;
-var fontTopGap = CLOUD_GAP + CLOUD_Y + CLOUD_PADDING + FONT_GAP;
-var BAR_WIDTH = 40;
-var BAR_HEIGHT = 150;
-var BAR_DISTANCE = 50;
-
-
-var renderCloud = function (ctx, x, y, color) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y, CLOUD_WIDTH, CLOUD_HEIGHT);
+var Cloud = {
+  WIDTH: 420,
+  HEIGHT: 270,
+  X: 100,
+  Y: 10,
+  PADDING: 10,
+  GAP: 10
 };
+
+var Bar = {
+  WIDTH: 40,
+  HEIGHT: 150,
+  DISTANCE: 50,
+};
+
+var FONT_GAP = 16;
+
+var fontTopGap = Cloud.GAP + Cloud.Y + Cloud.PADDING + FONT_GAP;
+
+
+var renderStatics = function (ctx, x, y, width, height, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y, width, height);
+};
+
 
 var renderText = function (ctx, x, y, color, text) {
   ctx.font = '16px PT Mono';
@@ -39,12 +47,6 @@ var randomInteger = function (min, max) {
   return rand;
 };
 
-var renderStatics = function (ctx, x, y, width, height, colorRenderStatics) {
-  ctx.fillStyle = colorRenderStatics;
-  ctx.fillRect(x, y, width, height);
-};
-
-
 var getMaxElement = function (arr) {
   var maxElement = arr[0];
 
@@ -60,25 +62,26 @@ var getMaxElement = function (arr) {
 window.renderStatistics = function (ctx, names, times) {
   var defaultColor = '#000000';
   var maxTime = getMaxElement(times);
-  var xStatistics = CLOUD_X + CLOUD_GAP + BAR_DISTANCE;
-  var distanceBar = BAR_WIDTH + BAR_DISTANCE;
+  var xStatistics = Cloud.X + Cloud.GAP + Bar.DISTANCE;
+  var distanceBar = Bar.WIDTH + Bar.DISTANCE;
+  var xCloud = Cloud.GAP + Cloud.X + Cloud.PADDING;
   var yStatistics = function (x) {
-    return CLOUD_Y + CLOUD_HEIGHT - (BAR_HEIGHT * times[x] / maxTime);
+    return Cloud.Y + Cloud.HEIGHT - (Bar.HEIGHT * times[x] / maxTime);
   };
 
-  renderCloud(ctx, CLOUD_X + CLOUD_PADDING, CLOUD_Y + CLOUD_PADDING, 'rgba(0, 0, 0, 0.7)');
-  renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
-  renderText(ctx, CLOUD_GAP + CLOUD_X + CLOUD_PADDING, CLOUD_GAP + CLOUD_Y + CLOUD_PADDING, defaultColor, 'Ура вы победили!');
-  renderText(ctx, CLOUD_GAP + CLOUD_X + CLOUD_PADDING, fontTopGap, defaultColor, 'Список результатов:');
+  renderStatics(ctx, Cloud.X + Cloud.PADDING, Cloud.Y + Cloud.PADDING, Cloud.WIDTH, Cloud.HEIGHT, 'rgba(0, 0, 0, 0.7)');
+  renderStatics(ctx, Cloud.X, Cloud.Y, Cloud.WIDTH, Cloud.HEIGHT, '#fff');
+  renderText(ctx, xCloud, Cloud.GAP + Cloud.Y + Cloud.PADDING, defaultColor, 'Ура вы победили!');
+  renderText(ctx, xCloud, fontTopGap, defaultColor, 'Список результатов:');
 
   for (var i = 0; i < names.length; i++) {
-    renderText(ctx, xStatistics + (distanceBar) * i, CLOUD_GAP + CLOUD_Y + CLOUD_PADDING + fontTopGap + BAR_HEIGHT + FONT_GAP + CLOUD_GAP, defaultColor, names[i]);
+    renderText(ctx, xStatistics + (distanceBar) * i, Cloud.GAP + Cloud.Y + Cloud.PADDING + fontTopGap + Bar.HEIGHT + FONT_GAP + Cloud.GAP, defaultColor, names[i]);
 
     for (var j = 0; j < times.length; j++) {
       renderText(ctx, xStatistics + (distanceBar) * j, yStatistics(j) - FONT_GAP * 3, defaultColor, Math.round(times[j]));
     }
 
-    renderStatics(ctx, xStatistics + (distanceBar) * i, yStatistics(i) - FONT_GAP * 2, BAR_WIDTH, BAR_HEIGHT * times[i] / maxTime, getColor(names[i]));
+    renderStatics(ctx, xStatistics + (distanceBar) * i, yStatistics(i) - FONT_GAP * 2, Bar.WIDTH, Bar.HEIGHT * times[i] / maxTime, getColor(names[i]));
   }
 
 };
