@@ -13,13 +13,14 @@ var similarListElement = userDialog.querySelector('.setup-similar-list');
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
 
-//  функция выбора рандомного элемента массива
-function getRandomAttribute(arr) {
+//  функция  генерации случайных данных
+var getRandomAttribute = function (arr) {
   var randInt = Math.floor(Math.random() * arr.length);
   return arr[randInt];
-}
-//  функция наполнения массива
-function getCharacters() {
+};
+
+//  функция создания DOM-элемента на основе JS-объекта
+var getCharacters = function () {
   var wizards = [];
   for (var i = 0; i < WIZARD_NUMBERS; i++) {
     wizards.push({
@@ -29,7 +30,7 @@ function getCharacters() {
     });
   }
   return wizards;
-}
+};
 
 var wizards = getCharacters();
 
@@ -43,11 +44,16 @@ function renderWizard(wizard) {
 
   return wizardElement;
 }
-//  наполнение блока по шаблону
+//  функцию заполнения блока DOM-элементами на основе массива JS-объектов
 var fragment = document.createDocumentFragment();
-for (var i = 0; i < wizards.length; i++) {
-  fragment.appendChild(renderWizard(wizards[i]));
-}
+var appendWizards = function () {
+
+  for (var i = 0; i < wizards.length; i++) {
+    fragment.appendChild(renderWizard(wizards[i]));
+  }
+};
+appendWizards();
+
 // вставляем fragment в setup-similar-list
 similarListElement.appendChild(fragment);
 
