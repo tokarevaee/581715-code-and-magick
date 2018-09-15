@@ -8,7 +8,7 @@ var WIZARD_FIREBALL_WRAP = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848
 var WIZARD_NUMBERS = 4;
 
 var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+// userDialog.classList.remove('hidden');
 
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 
@@ -70,7 +70,7 @@ var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && !evt.target.classList.contains('setup-user-name')) {
     closePopup();
   }
 };
@@ -89,13 +89,13 @@ var inPopupEnterPress = function (evt) {
 };
 
 var openPopup = function () {
-  setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
+  setup.classList.remove('hidden');
 };
 
 var closePopup = function () {
-  setup.classList.add('hidden');
   document.addEventListener('keydown', onPopupEscPress);
+  setup.classList.add('hidden');
 };
 
 setupOpen.addEventListener('click', function () {
@@ -144,7 +144,6 @@ wizardCoat.addEventListener('click', function () {
   wizardCoat.style.fill = getRandomAttribute(WIZARD_COAT_COLOR);
   wizardCoatInput.value = getRandomAttribute(WIZARD_COAT_COLOR);
 });
-
 
 var wizardFireballWrap = document.querySelector('.setup-fireball-wrap');
 var wizardFireballWrapInput = wizardFireballWrap.querySelector('input[name="fireball-color"]');
